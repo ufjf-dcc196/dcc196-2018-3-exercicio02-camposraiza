@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dbHelper = new SeriesDbHelper(getApplicationContext());
-        adapter = new LembreteAdapter(getCursorLivrosPos1950());
+        adapter = new LembreteAdapter(getCursorSeries());
 
         rclSeries = (RecyclerView) findViewById(R.id.rcl_series);
         rclSeries.setLayoutManager(new LinearLayoutManager(this));
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 values.put(SeriesContract.Lembrete.COLUMN_NAME_EP, Integer.valueOf(String.valueOf(edtEp.getText())));
                 long id = db.insert(SeriesContract.Lembrete.TABLE_NAME,null, values);
                 Log.i("DBINFO","registro criado com id: " + id);
-                adapter.setCursor(getCursorLivrosPos1950());
+                adapter.setCursor(getCursorSeries());
             }
         });
 
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         btnListar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Cursor cursor = getCursorLivrosPos1950();
+                Cursor cursor = getCursorSeries();
                 cursor.moveToPosition(-1);
                 while(cursor.moveToNext()){
                     int idxTitulo = cursor.getColumnIndexOrThrow(SeriesContract.Lembrete.COLUMN_NAME_TITULO);
@@ -74,20 +74,23 @@ public class MainActivity extends AppCompatActivity {
                     int idxEp = cursor.getColumnIndexOrThrow(SeriesContract.Lembrete.COLUMN_NAME_EP);
                     String ep = cursor.getString(idxEp);
                     Log.i("DBINFO","titulo: " + titulo +" autor: "+ autor + " episódio: " + ep);
+
                 }
+
+                adapter.setCursor(getCursorSeries());
             }
         });
     }
 
-    private Cursor getCursorLivrosPos1950() {
+    private Cursor getCursorSeries() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] visao = {
                 SeriesContract.Lembrete.COLUMN_NAME_TITULO,SeriesContract.Lembrete.COLUMN_NAME_TEMPORADA, SeriesContract.Lembrete.COLUMN_NAME_EP
         };
-        String restricoes = SeriesContract.Lembrete.COLUMN_NAME_EP + " > ?";
-        String[] params = {"1950"};
-        String sort = SeriesContract.Lembrete.COLUMN_NAME_EP+ " DESC";
-        return db.query(SeriesContract.Lembrete.TABLE_NAME,visao,restricoes,params,null,null,sort,null);
+        //String restricoes = SeriesContract.Lembrete.COLUMN_NAME_EP + " > ?";
+        //String[] params = {""};
+        //String sort = SeriesContract.Lembrete.COLUMN_NAME_EP+ " DESC";
+        return db.query(SeriesContract.Lembrete.TABLE_NAME,visao,null,null,null,null,null,null);
     }
 
 

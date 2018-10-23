@@ -25,8 +25,8 @@ class LembreteAdapter extends RecyclerView.Adapter<LembreteAdapter.ViewHolder>{
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View livroView = inflater.inflate(R.layout.serie_layout,parent,false);
-        ViewHolder holder = new ViewHolder(livroView);
+        View serieView = inflater.inflate(R.layout.serie_layout,parent,false);
+        ViewHolder holder = new ViewHolder(serieView);
         return holder;
     }
 
