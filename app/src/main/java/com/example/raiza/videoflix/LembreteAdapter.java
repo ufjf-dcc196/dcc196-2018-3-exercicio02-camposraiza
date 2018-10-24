@@ -36,8 +36,6 @@ class LembreteAdapter extends RecyclerView.Adapter<LembreteAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        int idxID = cursor.getColumnIndexOrThrow(SeriesContract.Lembrete._ID);
-
         int idxTitulo = cursor.getColumnIndexOrThrow(SeriesContract.Lembrete.COLUMN_NAME_TITULO);
 
         int idxAutor = cursor.getColumnIndexOrThrow(SeriesContract.Lembrete.COLUMN_NAME_TEMPORADA);
@@ -45,10 +43,9 @@ class LembreteAdapter extends RecyclerView.Adapter<LembreteAdapter.ViewHolder>{
         int idxEp = cursor.getColumnIndexOrThrow(SeriesContract.Lembrete.COLUMN_NAME_EP);
 
         cursor.moveToPosition(position);
-        holder.txtId.setText(cursor.getString(idxID));
-        holder.txtTitulo.setText(cursor.getString(idxTitulo));
-        holder.txtTemporada.setText(cursor.getString(idxAutor));
-        holder.txtEp.setText(String.valueOf(cursor.getString(idxEp)));
+        holder.txtTitulo.setText("Serie: "+cursor.getString(idxTitulo));
+        holder.txtTemporada.setText("Temporada: " + cursor.getString(idxAutor));
+        holder.txtEp.setText("Episódio: "+String.valueOf(cursor.getString(idxEp)));
     }
 
     @Override
@@ -77,7 +74,6 @@ class LembreteAdapter extends RecyclerView.Adapter<LembreteAdapter.ViewHolder>{
 
         public ViewHolder(final View itemView) {
             super(itemView);
-            txtId = itemView.findViewById(R.id.lembrete_txt_id);
             txtTitulo = itemView.findViewById(R.id.lembrete_txt_titulo);
             txtTemporada = itemView.findViewById(R.id.lembrete_txt_temporada);
             txtEp = itemView.findViewById(R.id.lembrete_txt_ep);
@@ -107,7 +103,12 @@ class LembreteAdapter extends RecyclerView.Adapter<LembreteAdapter.ViewHolder>{
 
     }
 
-
+    @Override
+    public long getItemId(int position) {
+        int idxID = cursor.getColumnIndexOrThrow(SeriesContract.Lembrete._ID);
+        cursor.moveToPosition(position);
+        return cursor.getLong(idxID);
+    }
 }
 
 

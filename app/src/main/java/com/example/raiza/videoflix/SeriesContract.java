@@ -17,6 +17,7 @@ public class SeriesContract {
                         +")";
         public final static String DROP_SERIES = "DROP TABLE IF EXISTS "
                 + Lembrete.TABLE_NAME;
+        public static final String COLUMN_NAME_ID = "_id";
     }
 
 }

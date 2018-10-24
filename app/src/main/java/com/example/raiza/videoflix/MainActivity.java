@@ -51,11 +51,8 @@ public class MainActivity extends AppCompatActivity {
             public void onSerieClick(View serieView, int position) {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 String select = SeriesContract.Lembrete._ID+"=?";
-                TextView txtTitulo = (TextView) serieView.findViewById(R.id.lembrete_txt_id);
-
-                String[] selectArgs = {txtTitulo.getText().toString()};
+                String[] selectArgs = {Long.toString(adapter.getItemId(position))};
                 db.delete(SeriesContract.Lembrete.TABLE_NAME,select,selectArgs);
-                Log.i("DBINFO", "DEL titulo:"+txtTitulo.getText().toString());
                 adapter.setCursor(getCursorSeries());
                 adapter.notifyItemRemoved(position);
             }
@@ -82,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private Cursor getCursorSeries() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] visao = {
+                SeriesContract.Lembrete._ID,SeriesContract.Lembrete.COLUMN_NAME_ID,
                 SeriesContract.Lembrete._ID,SeriesContract.Lembrete.COLUMN_NAME_TITULO,
                 SeriesContract.Lembrete.COLUMN_NAME_TEMPORADA,
                 SeriesContract.Lembrete.COLUMN_NAME_EP
