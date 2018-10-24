@@ -45,12 +45,13 @@ public class MainActivity extends AppCompatActivity {
         rclSeries = (RecyclerView) findViewById(R.id.rcl_series);
         rclSeries.setLayoutManager(new LinearLayoutManager(this));
         rclSeries.setAdapter(adapter);
+
         adapter.setOnSerieClickListener(new LembreteAdapter.OnSerieClickListener() {
-            @Override
+        @Override
             public void onSerieClick(View serieView, int position) {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
-                String select = SeriesContract.Lembrete.COLUMN_NAME_EP+"=?";
-                TextView txtTitulo = (TextView) serieView.findViewById(R.id.lembrete_txt_titulo);
+                String select = SeriesContract.Lembrete._ID+"=?";
+                TextView txtTitulo = (TextView) serieView.findViewById(R.id.lembrete_txt_id);
 
                 String[] selectArgs = {txtTitulo.getText().toString()};
                 db.delete(SeriesContract.Lembrete.TABLE_NAME,select,selectArgs);
@@ -59,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyItemRemoved(position);
             }
         });
-
-
 
         btnInserir = (Button) findViewById(R.id.btn_inserir);
         btnInserir.setOnClickListener(new View.OnClickListener() {
@@ -72,39 +71,30 @@ public class MainActivity extends AppCompatActivity {
                 values.put(SeriesContract.Lembrete.COLUMN_NAME_TEMPORADA,Integer.valueOf(String.valueOf(edtTemporada.getText())));
                 values.put(SeriesContract.Lembrete.COLUMN_NAME_EP, Integer.valueOf(String.valueOf(edtEp.getText())));
                 long id = db.insert(SeriesContract.Lembrete.TABLE_NAME,null, values);
+                values.put(SeriesContract.Lembrete._ID, Long.valueOf(id));
                 Log.i("DBINFO","registro criado com id: " + id);
                 adapter.setCursor(getCursorSeries());
             }
         });
-
-        btnListar = (Button) findViewById(R.id.btn_listar);
-        btnListar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Cursor cursor = getCursorSeries();
-                cursor.moveToPosition(-1);
-                while(cursor.moveToNext()){
-                    int idxTitulo = cursor.getColumnIndexOrThrow(SeriesContract.Lembrete.COLUMN_NAME_TITULO);
-                    String titulo = cursor.getString(idxTitulo);
-                    int idxAutor = cursor.getColumnIndexOrThrow(SeriesContract.Lembrete.COLUMN_NAME_TEMPORADA);
-                    String autor = cursor.getString(idxAutor);
-                    int idxEp = cursor.getColumnIndexOrThrow(SeriesContract.Lembrete.COLUMN_NAME_EP);
-                    String ep = cursor.getString(idxEp);
-                    Log.i("DBINFO","titulo: " + titulo +" autor: "+ autor + " episódio: " + ep);
-
-                }
-
-                adapter.setCursor(getCursorSeries());
-            }
-        });
+        rclSeries.setAdapter(adapter);
     }
 
     private Cursor getCursorSeries() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] visao = {
-                SeriesContract.Lembrete.COLUMN_NAME_TITULO,SeriesContract.Lembrete.COLUMN_NAME_TEMPORADA, SeriesContract.Lembrete.COLUMN_NAME_EP
+                SeriesContract.Lembrete._ID,SeriesContract.Lembrete.COLUMN_NAME_TITULO,
+                SeriesContract.Lembrete.COLUMN_NAME_TEMPORADA,
+                SeriesContract.Lembrete.COLUMN_NAME_EP
         };
-        return db.query(SeriesContract.Lembrete.TABLE_NAME,visao,null,null,null,null,null,null);
+        return db.query(
+                SeriesContract.Lembrete.TABLE_NAME,
+                visao,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 
 

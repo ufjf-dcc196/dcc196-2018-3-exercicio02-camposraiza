@@ -9,13 +9,6 @@
 
 
     <EditText
-        android:id="@+id/edt_titulo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Título"
-        android:inputType="textPersonName" />
-
-    <EditText
         android:id="@+id/edt_temporada"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,19 +17,19 @@
         app:layout_constraintEnd_toStartOf="@+id/edt_ep" />
 
     <EditText
+        android:id="@+id/edt_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Título"
+        android:inputType="textPersonName" />
+
+    <EditText
         android:id="@+id/edt_ep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Episódio"
         android:inputType="textPersonName" />
-
-    <Button
-        android:id="@+id/btn_listar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Listar"
-        app:layout_constraintBottom_toTopOf="@+id/btn_inserir"/>
 
     <Button
         android:id="@+id/btn_inserir"
