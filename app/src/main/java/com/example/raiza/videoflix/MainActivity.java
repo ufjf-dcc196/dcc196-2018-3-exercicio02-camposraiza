@@ -1,5 +1,6 @@
 package com.example.raiza.videoflix;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.Random;
 
@@ -21,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rclSeries;
     private SeriesDbHelper dbHelper;
     private LembreteAdapter adapter;
-
 
     private EditText edtTitulo;
     private EditText edtTemporada;
@@ -35,15 +36,31 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new SeriesDbHelper(getApplicationContext());
         adapter = new LembreteAdapter(getCursorSeries());
 
-        rclSeries = (RecyclerView) findViewById(R.id.rcl_series);
-        rclSeries.setLayoutManager(new LinearLayoutManager(this));
-        rclSeries.setAdapter(adapter);
-
         edtTitulo = (EditText) findViewById(R.id.edt_titulo);
         edtTemporada = (EditText) findViewById(R.id.edt_temporada);
         edtEp = (EditText) findViewById(R.id.edt_ep);
 
         final Random rnd = new Random();
+
+        rclSeries = (RecyclerView) findViewById(R.id.rcl_series);
+        rclSeries.setLayoutManager(new LinearLayoutManager(this));
+        rclSeries.setAdapter(adapter);
+        adapter.setOnSerieClickListener(new LembreteAdapter.OnSerieClickListener() {
+            @Override
+            public void onSerieClick(View serieView, int position) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                String select = SeriesContract.Lembrete.COLUMN_NAME_EP+"=?";
+                TextView txtTitulo = (TextView) serieView.findViewById(R.id.lembrete_txt_titulo);
+
+                String[] selectArgs = {txtTitulo.getText().toString()};
+                db.delete(SeriesContract.Lembrete.TABLE_NAME,select,selectArgs);
+                Log.i("DBINFO", "DEL titulo:"+txtTitulo.getText().toString());
+                adapter.setCursor(getCursorSeries());
+                adapter.notifyItemRemoved(position);
+            }
+        });
+
+
 
         btnInserir = (Button) findViewById(R.id.btn_inserir);
         btnInserir.setOnClickListener(new View.OnClickListener() {
@@ -87,9 +104,6 @@ public class MainActivity extends AppCompatActivity {
         String[] visao = {
                 SeriesContract.Lembrete.COLUMN_NAME_TITULO,SeriesContract.Lembrete.COLUMN_NAME_TEMPORADA, SeriesContract.Lembrete.COLUMN_NAME_EP
         };
-        //String restricoes = SeriesContract.Lembrete.COLUMN_NAME_EP + " > ?";
-        //String[] params = {""};
-        //String sort = SeriesContract.Lembrete.COLUMN_NAME_EP+ " DESC";
         return db.query(SeriesContract.Lembrete.TABLE_NAME,visao,null,null,null,null,null,null);
     }
 

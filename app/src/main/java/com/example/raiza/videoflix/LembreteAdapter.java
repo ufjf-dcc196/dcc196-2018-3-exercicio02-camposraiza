@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 class LembreteAdapter extends RecyclerView.Adapter<LembreteAdapter.ViewHolder>{
     private Cursor cursor;
+    private OnSerieClickListener listener;
+
+
     public LembreteAdapter(Cursor c){
         cursor = c;
     }
@@ -49,18 +52,52 @@ class LembreteAdapter extends RecyclerView.Adapter<LembreteAdapter.ViewHolder>{
         return cursor.getCount();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    public interface OnSerieClickListener{
+        void onSerieClick(View serieView, int position);
+    }
+
+    public void setOnSerieClickListener(OnSerieClickListener listener){
+        this.listener=listener;
+    }
+
+
+
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView txtTitulo;
         public TextView txtTemporada;
         public TextView txtEp;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
             txtTitulo = itemView.findViewById(R.id.lembrete_txt_titulo);
             txtTemporada = itemView.findViewById(R.id.lembrete_txt_temporada);
             txtEp = itemView.findViewById(R.id.lembrete_txt_ep);
+            itemView.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v){
+                    if(listener!=null){
+                        int position = getAdapterPosition();
+                        if(position!=RecyclerView.NO_POSITION){
+                            listener.onSerieClick(itemView, position);
+                        }
+                    }
+                }
+            });
         }
+
+        @Override
+        public void onClick(View v){
+            if(listener!=null){
+                int position = getAdapterPosition();
+                if(position!=RecyclerView.NO_POSITION){
+                    listener.onSerieClick(v, position);
+                }
+            }
+        }
+
     }
+
 
 }
 
